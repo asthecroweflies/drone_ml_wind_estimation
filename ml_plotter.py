@@ -1,3 +1,10 @@
+'''
+
+    Utility script for plotting time series of predictions vs. expectations
+    in addition to history of data. 
+
+'''
+
 from tensorflow.python.keras.metrics import Metric
 from sklearn.metrics import mean_squared_error
 from tensorflow.keras import backend as K
@@ -10,6 +17,9 @@ import matplotlib
 import itertools
 import time 
 import os
+
+base_loc = os.path.dirname(os.path.realpath(__file__))
+data_loc = base_loc + "\\data\\"
 
 show_figs = 1
 save_figs = 0
@@ -69,7 +79,7 @@ def plot_moving_avg_final(t1, t2, t, ti):
     axes[0].legend(loc="best", ncol=2,frameon=False)
     plt.subplots_adjust(top=0.885,bottom=0.194,left=0.1,right=0.94,hspace=0.2,wspace=0.06)
     if save_figs:
-        plt.savefig("G:\\My Drive\\wind_est-ml\\meetings\\8.7\\training_increments\\%s_%d.png" % (t, ti * 100))
+        plt.savefig(base_loc + "\\%s_%d.png" % (t, ti * 100))
 
     if show_figs:
         plt.show()
@@ -130,7 +140,7 @@ def plot_metrics_final(trial_metrics, training_increments, dataLength, title):
     plt.show()
 
     if save_figs:
-        plt.savefig(os.get_cwd() + "%s_spread.png" % (title))
+        plt.savefig(base_loc + "%s_spread.png" % (title))
 
 def MBE(y_true, y_pred):
     '''
