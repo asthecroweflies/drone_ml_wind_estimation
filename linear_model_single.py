@@ -1,3 +1,8 @@
+'''
+    Creates and evaluates a linear regression prediction model using a
+    single drone (in this example we use DJI Mavic data + accompanying wind data)
+'''
+
 from tensorflow.python.keras.metrics import Metric
 from sklearn.linear_model import LinearRegression
 
