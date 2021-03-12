@@ -16,17 +16,16 @@ sys.path.append("G:\\My Drive\\wind_est-ml\\data manip\\")
 from ml_plotter import plot_moving_avg_final
 from ml_plotter import plot_metrics_final
 
-epochs = 2
-show_figs = 1
+epochs = 50     # duration of training
+show_figs = 1   
 save_figs = 0
-training_increments = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+training_increments = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9] # determines training / validation split
+training_increments = [0.6] # we found comparable results using ratios down to ~40:60
 use_moving_avg_metrics = 1
-training_increments = [0.6]
-use_all_cols = 1
-solo_cols = []
-mav_cols  = []
-predicted_wspd = []
-actual_wspd    = []
+use_all_cols = 1            # whether to include accelerometer data or only roll + pitch 
+solo_cols, mav_cols = [], []
+predicted_wspd, actual_wspd = [], []
+
 base_loc = os.path.dirname(os.path.realpath(__file__))
 data_loc = base_loc + "\\data\\"
 
@@ -54,11 +53,7 @@ def main():
     title = "1 Hz March Mavic"
 
     for m in range(len(mav_cols)):
-        #lf_mav[:,m] = scale(lf_mav[:,m])
-        #june_mavic[:,m] = scale(june_mavic[:,m])
-        #march_mav[:,m] = scale(march_mav[:,m])
         drone_attitude[:,m] = scale(drone_attitude[:,m])
-
 
     trials = [(drone_attitude, ground_truth_wspd,  title, ground_truth_wdir)]
     
@@ -66,9 +61,8 @@ def main():
     For each tuple in trials, trains a model on given data and plots predictions on test data
     '''
     models = []
-    #training_increments = [0.1, 0.9]
     trial_metrics = []
-    trial_results = [] # contains predictions andground truths 
+    trial_results = [] # contains predictions and ground truths 
     best_training_increment = 0
     best_rmse = 1e4
     preds = []
@@ -116,7 +110,7 @@ def main():
             if (metrics[1] < best_rmse):
                 best_rmse = metrics[1]
                 best_training_increment = ti
-
+A
             trial_metrics.append(metrics)
             drone_wspd_pred = model.predict(testData, steps=1)[:,0]
             preds.append(drone_wspd_pred)
@@ -339,7 +333,7 @@ def buildLSTM(numFeatures):
     # march model 420-180-90d92-42-lr4e-5
     multi_step_model.add(tf.keras.layers.LSTM(420, return_sequences=True, input_shape=(numPoints, numFeatures)))
     multi_step_model.add(tf.keras.layers.LSTM(180, return_sequences=True))
-    multi_step_model.add(tf.keras.layers.LSTM(90, return_sequences=True, dropout=0.96))
+    multi_step_model.add(tf.keras.layers.LSTM(90, return_sequences=True, dropout=0.96)) # dropout used to combat overfitting in one flight during June
     #multi_step_model.add(tf.keras.layers.LSTM(90, return_sequences=True))
     multi_step_model.add(tf.keras.layers.LSTM(48, activation='relu')) 
 
