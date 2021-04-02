@@ -110,7 +110,7 @@ def main():
             if (metrics[1] < best_rmse):
                 best_rmse = metrics[1]
                 best_training_increment = ti
-A
+
             trial_metrics.append(metrics)
             drone_wspd_pred = model.predict(testData, steps=1)[:,0]
             preds.append(drone_wspd_pred)
